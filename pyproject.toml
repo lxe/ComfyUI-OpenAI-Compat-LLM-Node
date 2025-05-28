@@ -1,0 +1,15 @@
+[project]
+name = "openai-compat-llm-node"
+description = "A ComfyUI custom node that provides integration with OpenAI-compatible Large Language Model APIs, including OpenAI, local models, and other compatible endpoints. Supports both text-only and multimodal (text + image) interactions."
+version = "1.0.0"
+license = {file = "LICENSE"}
+dependencies = ["requests>=2.32.3", "Pillow>=11.2.1", "numpy>=1.24.0"]
+
+[project.urls]
+Repository = "https://github.com/lxe/ComfyUI-OpenAI-Compat-LLM-Node"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "ComfyUI-OpenAI-Compat-LLM-Node"
+Icon = ""
