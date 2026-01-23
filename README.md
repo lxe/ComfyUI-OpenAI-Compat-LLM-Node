@@ -12,6 +12,7 @@ A ComfyUI custom node that provides integration with OpenAI-compatible Large Lan
 - **Generation parameters**: Control max tokens, temperature, and image detail level
 - **Automatic image encoding**: Converts ComfyUI images to base64 for API compatibility
 - **Error handling**: Comprehensive error reporting and fallback responses
+- **Compatibility**: Compatible with original and new chat completions API
 
 ## Installation
 
@@ -67,6 +68,10 @@ A ComfyUI custom node that provides integration with OpenAI-compatible Large Lan
    - **Max Tokens**: Maximum response length (default: 150)
    - **Temperature**: Creativity/randomness (0.0-2.0, default: 0.7)
    - **Image Detail**: Quality level for image processing (low/high/auto, default: auto)
+   - **Compat Mode**: Enable compatiblity with old (original) API:
+       - Passes _max__tokens_ instead of _max__completion__tokens_
+       - Passes _system_prompt_ instead of _developer__prompt_
+   - **System Prompt**: (optional) A separate system prompt
 
 ## Supported Endpoints
 
@@ -173,6 +178,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - For discussions: [GitHub Discussions](https://github.com/yourusername/ComfyUI-OpenAI-Compat-LLM-Node/discussions)
 
 ## Changelog
+
+### v1.2.0
+- Fixed error ```'Tensor' object has no attribute 'astype'```
+- Added compatibility switch to support chat completions with old and new API
+- Added separate input for system prompt
 
 ### v1.1.0
 - Added image input support for multimodal LLMs
