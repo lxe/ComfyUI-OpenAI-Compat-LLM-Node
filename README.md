@@ -142,6 +142,8 @@ This node works with any OpenAI-compatible API endpoint, including:
 | max_tokens | INT | No | 150 | Maximum tokens in response |
 | temperature | FLOAT | No | 0.7 | Sampling temperature (0.0-2.0) |
 | image_detail | STRING | No | "auto" | Image processing detail level (low/high/auto) |
+| compat_mode | BOOL | No | False | Use old style request syntax for chat completions |
+| system_prompt | STRING | No | "" | Optional system prompt, will be passed as system/developer message |
 
 ## Node Outputs
 
