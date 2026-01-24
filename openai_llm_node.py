@@ -12,7 +12,7 @@ class OpenAILLMNode:
             "required": {
                 "prompt": ("STRING", {
                     "multiline": True,
-                    "default": "You are a helpful assistant.",
+                    "default": "Hello",
                     "placeholder": "Enter your prompt here..."
                 }),
                 "endpoint": ("STRING", {
@@ -48,7 +48,15 @@ class OpenAILLMNode:
                 "image_detail": (["low", "high", "auto"], {
                     "default": "auto"
                 }),
-            }
+                 "compat_mode": ("BOOLEAN", {
+                    "default": False
+                }),
+                "system_prompt": ("STRING", {
+                    "multiline": True,
+                    "default": "",
+                    "placeholder": "Optionally enter your system/developer prompt here."
+                }),
+           }
         }
     
     RETURN_TYPES = ("STRING",)
@@ -67,7 +75,8 @@ class OpenAILLMNode:
             
             # Convert from 0-1 float to 0-255 uint8
             if image_array.max() <= 1.0:
-                image_array = (image_array * 255).astype(np.uint8)
+#                image_array = (image_array * 255).astype(np.uint8)
+                image_array = (image_array * 255).numpy().astype(np.uint8)
             
             # Convert numpy array to PIL Image
             if len(image_array.shape) == 3 and image_array.shape[2] == 3:
@@ -90,7 +99,7 @@ class OpenAILLMNode:
         except Exception as e:
             raise Exception(f"Failed to encode image: {str(e)}")
     
-    def generate_text(self, prompt, endpoint, api_token, model="gpt-4-vision-preview", max_tokens=150, temperature=0.7, image=None, image_detail="auto"):
+    def generate_text(self, prompt, endpoint, api_token, model="gpt-4-vision-preview", max_tokens=150, temperature=0.7, image=None, image_detail="auto", compat_mode=False, system_prompt=""):
         try:
             headers = {
                 "Authorization": f"Bearer {api_token}",
@@ -125,9 +134,27 @@ class OpenAILLMNode:
                 "messages": [
                     {"role": "user", "content": message_content}
                 ],
-                "max_tokens": max_tokens,
-                "temperature": temperature
+                "temperature": temperature,
+                "reasoning_effort": "none"
             }
+            
+            if compat_mode:
+                data["max_tokens"] = max_tokens
+            else:
+                data["max_completion_tokens"] = max_tokens
+            
+            
+            if system_prompt:
+                if compat_mode:
+                    data["messages"].insert(0, {
+                        "role": "system",
+                        "content": system_prompt
+                    })
+                else:
+                    data["messages"].insert(0, {
+                        "role": "developer",
+                        "content": system_prompt
+                    })
             
             response = requests.post(endpoint, headers=headers, json=data, timeout=30)
             response.raise_for_status()
